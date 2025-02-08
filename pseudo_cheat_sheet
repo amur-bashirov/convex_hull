@@ -1,0 +1,27 @@
+def convex_hull(points):
+    # Base case: If the list is small, solve it directly
+    if len(points) <= 3:
+        return brute_force_hull(points)
+    
+    # Step 1: Sort points by x-coordinate
+    points.sort(key=lambda p: p[0])
+    
+    # Step 2: Divide into two halves
+    mid = len(points) // 2
+    left = points[:mid]
+    right = points[mid:]
+    
+    # Step 3: Recursively compute hulls for each half
+    left_hull = convex_hull(left)
+    right_hull = convex_hull(right)
+    
+    # Step 4: Merge the two sub-hulls
+    return merge_hulls(left_hull, right_hull)
+
+def brute_force_hull(points):
+    # Compute convex hull for small list (2 or 3 points)
+    pass  # Implement this directly using geometry
+
+def merge_hulls(left_hull, right_hull):
+    # Combine two convex hulls into one
+    pass  # Find upper/lower tangents and merge
