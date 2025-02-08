@@ -25,3 +25,6 @@ def brute_force_hull(points):
 def merge_hulls(left_hull, right_hull):
     # Combine two convex hulls into one
     pass  # Find upper/lower tangents and merge
+
+
+
