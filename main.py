@@ -16,7 +16,7 @@ def main(n: int, distribution: str, seed: int | None):
 
     draw_hull(hull_points)
     title(f'{n} {distribution} points: {round(end - start, 4)} seconds')
-    show_plot()
+    show_plot(block=True)
 
 
 if __name__ == '__main__':
@@ -44,5 +44,4 @@ if __name__ == '__main__':
         import matplotlib.pyplot as plt
         plt.switch_backend('QtAgg')
         plt.ion()
-    show_plot()
     main(args.n, args.dist, args.seed)
