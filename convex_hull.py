@@ -258,4 +258,3 @@ def merge_hulls(left_hull, right_hull):
     print(f"Merged hull: {merged_hull}" + "\n")
 
     return merged_hull
-print("Matthew")
