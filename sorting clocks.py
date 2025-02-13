@@ -269,8 +269,13 @@ def find_lower_tangent2(left_hull, right_hull):
 
 
 
+
+
 if __name__ == '__main__':
     points = [(2,4),(3, 2), (4, 3)]
+    max_point = max(points, key=lambda p: (p[0], p[1]))
+    print()
+    print(max_point)
     print(points)
     points.sort(key=lambda p: (p[0], p[1]))
     print()

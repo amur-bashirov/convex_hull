@@ -16,6 +16,7 @@ def main(n: int, distribution: str, seed: int | None):
 
     draw_hull(hull_points)
     title(f'{n} {distribution} points: {round(end - start, 4)} seconds')
+    plot_points(points)
     show_plot(block=True)
 
 
@@ -24,7 +25,7 @@ if __name__ == '__main__':
     # To debug or run in your IDE
     # you can uncomment the lines below and modify the arguments as needed
     import sys
-    sys.argv = ['main.py', '-n', '15', '--seed', '312', '--debug']
+    sys.argv = ['main.py', '-n', '2000000',"--dist", "guassian" , '--seed', '312', '--debug']
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', type=int, help='The number of points to generate', default=10)

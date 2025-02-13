@@ -5,12 +5,15 @@ import math
 from contextlib import nullcontext
 
 from numpy.ma.core import right_shift
+import copy
 
 from plotting import plot_points, draw_hull, circle_point, draw_line, show_plot
 
+c_points = []
 
 def compute_hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
     """Return the subset of provided points that define the convex hull"""
+    c_points = copy.deepcopy(points)
     points.sort(key=lambda p: (p[0], p[1]))
     # print(points)
     # print()
@@ -63,13 +66,15 @@ def counterclockwise_next(points, index):
 
 
 def find_upper_tangent(left_hull, right_hull):
-    left_copy = left_hull
-    left_copy.sort(key=lambda p: (p[0], p[1]))
-    p_idx = len(left_hull) - 1
-    q_idx = 0
-    q = right_hull[q_idx]
-    p = left_copy[p_idx]
-    p_idx = left_copy.index(p)
+    # print(left_hull)
+    # left_copy = copy.deepcopy(left_hull)
+    # left_copy.sort(key=lambda p: (p[0], p[1]))
+    # p_idx = len(left_hull) - 1
+    p = max(left_hull, key=lambda p: p[0])
+    next_idx = 0
+    q = right_hull[next_idx]
+    # p = left_copy[p_idx]
+    p_idx = left_hull.index(p)
     temp = [p, q]
     done = False
     # print("Trying to find an upper tangent")
@@ -79,31 +84,31 @@ def find_upper_tangent(left_hull, right_hull):
     p_next = left_hull[p_idx - 1]
     p_idx -= 1
 
-    if q_idx == len(right_hull) - 1:
-        q_idx = -1
-    q_next = right_hull[q_idx + 1]
-    q_idx += 1
+    if next_idx == len(right_hull) - 1:
+        next_idx = -1
+    q_next = right_hull[next_idx + 1]
+    next_idx += 1
 
     while done == False:
         done = True
 
-        for _ in range(len(right_hull)):
+        for _ in range(len(right_hull)+1):
             orig_sl = slope(p,q)
             new_sl = slope(p,q_next)
             # print(f"Comparing {orig_sl} and {new_sl}")
             if orig_sl < new_sl:
                 q = q_next
-                if q_idx == len(right_hull) - 1:
-                    q_idx = -1
-                q_next = right_hull[q_idx + 1]
-                q_idx += 1
+                if next_idx == len(right_hull) - 1:
+                    next_idx = -1
+                q_next = right_hull[next_idx + 1]
+                next_idx += 1
                 # print(f"Found new value of q for upper tangent: {p} -> {q}")
                 temp = [p, q]
                 done = False
             else:
                 break
 
-        for _ in range(len(left_hull)):
+        for _ in range(len(left_hull)+1):
             orig_sl = slope(p,q)
             new_sl = slope(p_next,q)
             # print(f"Comparing {orig_sl} and {new_sl}")
@@ -118,25 +123,27 @@ def find_upper_tangent(left_hull, right_hull):
                 done = False
             else:
                 break
-    draw_hull(left_hull)
-    draw_hull(right_hull)
+    # draw_hull(left_hull)
+    # draw_hull(right_hull)
 
-    draw_line(p,q)
-    show_plot(block=True)
-    print(f"Final values for upper tangent: {p} -> {q}")
+    # draw_line(p,q)
+    # show_plot(block=True)
+    # print(f"Final values for upper tangent: {p} -> {q}")
     return temp
 
 
 
 
 def find_lower_tangent(left_hull, right_hull):
-    left_copy = left_hull
-    left_copy.sort(key=lambda p: (p[0], p[1]))
-    p_idx = len(left_hull) - 1
+    # print(left_hull)
+    # left_copy = copy.deepcopy(left_hull)
+    # left_copy.sort(key=lambda p: (p[0], p[1]))
+    p = max(left_hull, key=lambda p: p[0])
+    # p_idx = len(left_hull) - 1
     q_idx = 0
     q = right_hull[q_idx]
-    p = left_copy[p_idx]
-    p_idx = left_copy.index(p)
+    # p = left_copy[p_idx]
+    p_idx = left_hull.index(p)
     temp = [p, q]
     done = False
     # print("Trying to find a lower tangent")
@@ -158,7 +165,7 @@ def find_lower_tangent(left_hull, right_hull):
 
 
 
-        for _ in range(len(right_hull)):
+        for _ in range(len(right_hull)+1):
             orig_sl = slope(p,q)
             new_sl = slope( p,q_next)
             # print(f"Comparing {orig_sl} and {new_sl}")
@@ -175,7 +182,7 @@ def find_lower_tangent(left_hull, right_hull):
                 break
 
 
-        for _ in range(len(left_hull)):
+        for _ in range(len(left_hull)+1):
             orig_sl = slope( p,q)
             new_sl = slope( p_next,q)
             # print(f"Comparing {orig_sl} and {new_sl}")
@@ -191,24 +198,26 @@ def find_lower_tangent(left_hull, right_hull):
             else:
                 break
 
-    draw_hull(left_hull)
-    draw_hull(right_hull)
-    draw_line(p,q)
-    show_plot(block=True)
-    print(f"Final values for lower tangent: {p} -> {q}")
+    # draw_hull(left_hull)
+    # draw_hull(right_hull)
+    # draw_line(p,q)
+    # show_plot(block=True)
+    # print(f"Final values for lower tangent: {p} -> {q}")
     return temp
 
 
 def merge_hulls(left_hull, right_hull):
-    print(f"Merging: {left_hull} and {right_hull}")
-    draw_hull(left_hull)
-    draw_hull(right_hull)
-    show_plot(block=True)
+    # print(f"Merging: {left_hull} and {right_hull}")
+
 
 
     upper_tangent = find_upper_tangent(left_hull,right_hull)
     lower_tangent = find_lower_tangent(left_hull, right_hull)
-
+    # draw_line(upper_tangent[0], upper_tangent[1])
+    # draw_line(lower_tangent[0], lower_tangent[1])
+    # draw_hull(left_hull)
+    # draw_hull(right_hull)
+    # show_plot(block=True)
 
 
     merged_hull = []
@@ -230,31 +239,27 @@ def merge_hulls(left_hull, right_hull):
     index = right_hull.index(upper_tangent[1])
     merged_hull.append(upper_tangent[1])
     for _ in range(len(right_hull)):
-        if right_hull[0] == lower_tangent[1] and lower_tangent[1] == upper_tangent[1]:
+        if  lower_tangent[1] == upper_tangent[1]:
             break
         next,index = clockwise_next(right_hull, index)
-        if next == lower_tangent[1] and lower_tangent[1] == upper_tangent[1]:
-            break
         if next == lower_tangent[1]:
             merged_hull.append(lower_tangent[1])
             break
         merged_hull.append(next)
 
 
-    if lower_tangent[0] not in merged_hull:
-        merged_hull.append(lower_tangent[0])
-    index = left_hull.index(lower_tangent[0])
+    index = left_hull.index(lower_tangent[0]) - 1
     for _ in range(len(left_hull)):
         next, index = clockwise_next(left_hull, index)
-        if next in merged_hull:
+        if next == left_hull[0]:
+            if next not in merged_hull:
+                merged_hull.append(next)
             break
         merged_hull.append(next)
 
-
-
-
-    draw_hull(merged_hull)
-    show_plot(block=True)
-    print(f"Merged hull: {merged_hull}" + "\n")
+    # plot_points(c_points)
+    # draw_hull(merged_hull)
+    # show_plot(block=True)
+    # print(f"Merged hull: {merged_hull}" + "\n")
 
     return merged_hull
